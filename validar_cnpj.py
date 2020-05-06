@@ -1,25 +1,24 @@
 import re #Importação da biblioteca para utilização de métodos das expressões regulares
 
 def validacao_cnpj(x):
-    cnpj_re = r'\s(\d{2}\.\d{3}\.\d{3}/\d{4}-\d{2})\s'
-    cpf_rec = r'(\d{3}\.\d{3}\.\d{3}-\d{2})\s'
-    cnpj_r = re.search(cnpj_re, x)
+    cnpj_re = r'\s(\d{2}\.\d{3}\.\d{3}/\d{4}-\d{2})\s'  #Expressão regular que vai encontrar o formarto de CNPJ na entrada
+    cpf_rec = r'(\d{3}\.\d{3}\.\d{3}-\d{2})\s'  #Expressão regular que vai encontrar o formarto de CPF na entrada
+    cnpj_r = re.search(cnpj_re, x) ##Procura o CNPJ através da expressão criada e armazena na variável cnpj_r
 
+    #Se foi encontrada o CNPJ então é feita a validação, senão o formato que foi encontrado é de CPF e também realiza a validação
     if cnpj_r:
-        b = re.findall(r'(\d)', cnpj_r.group())
+        b = re.findall(r'(\d)', cnpj_r.group()) #Transforma a expressão encontrada em uma lista de strings através do metódo .findall()
 
-        for i in range(14):
+        for i in range(14):     #Converte a lista de strings em uma lista de inteiros para possibilitar os calcúlos
             b[i] = int(b[i])
 
-        num1 = 5
-        num2 = 9
-        somac1 = 0
-        for i in range(12):
+        num1,num2,somac1 = 5,9,0
+        
+        for i in range(12): #Realiza os calcúlos necessários para a validação do CNPJ
             if i <= 3:
                 x1 = b[i] * num1
                 somac1 += x1
                 num1 -= 1
-
             if i > 3:
                 y1 = b[i] * num2
                 somac1 += y1
@@ -33,16 +32,13 @@ def validacao_cnpj(x):
             primeiro = 11 - resc1
 
         if primeiro == b[12]:
+            num3,num4,somac2 = 6,9,0
 
-            num3 = 6
-            num4 = 9
-            somac2 = 0
             for i in range(13):
                 if i <= 4:
                     x = b[i] * num3
                     somac2 += x
                     num3 -= 1
-
                 if i > 4:
                     y = b[i] * num4
                     somac2 += y
@@ -56,18 +52,20 @@ def validacao_cnpj(x):
                 segundo = 11 - resc2
 
             if segundo == b[13]:
-                return  True #print("CNPJ VÁLIDO: " + cnpj_r.group())
+                print("CNPJ VÁLIDO: " + cnpj_r.group())
+                return  True
             else:
-                return False #print("CNPJ INVÁLIDO!!")
+                print("CNPJ INVÁLIDO!!")
+                return False 
         else:
-            return  False #print("CNPJ INVÁLIDO!!")
-
+            print("CNPJ INVÁLIDO!!")
+            return  False
     else:
-        cpf_c = re.findall(cpf_rec, x)
-        h = len(cpf_c)
+        cpf_c = re.findall(cpf_rec, x)  #Procura o CPF através da expressão criada e armazena na variável cpf_c
+        h = len(cpf_c)  #Verifica a quantidade de CPF que foi encontrada na nota e armazena em 'h'
 
+        #Se houver mais de um CPF encontrado é feita a validação somente no segundo
         if h > 1:
-
             cpf2_re = r'\s(\d{3}\.\d{3}\.\d{3}-\d{2})\s'
             cpfc2 = re.search(cpf2_re, x)
 
@@ -96,12 +94,21 @@ def validacao_cnpj(x):
                         valor2 = 11 - resto2
 
                     if valor2 == ac[10]:
-                        return True #print(" CPF DO VENDEDOR VÁLIDO:")
+                        print(" CPF DO VENDEDOR VÁLIDO:")
+                        return True
                     else:
-                        return False  # print("CPF DO VENDEDOR INVÁLIDO")
+                        print("CPF DO VENDEDOR INVÁLIDO")
+                        return False  
                 else:
-                    return False #print("CPF DO VENDEDOR INVÁLIDO")
+                    print("CPF DO VENDEDOR INVÁLIDO")
+                    return False
             else:
-                return False  # print("FORMATO INCORRETO DE CPF DO VENDEDOR!!")
+                print("FORMATO INCORRETO DE CPF DO VENDEDOR!!")
+                return False
         else:
-            return False #print("FORMATO INCORRETO DE CNPJ!!")
+            print("FORMATO INCORRETO DE CNPJ!!")
+            return False
+
+valor_entrada = input()
+resultado = validacao_cnpj(valor_entrada)
+print(resultado)
